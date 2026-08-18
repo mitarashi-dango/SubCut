@@ -213,13 +213,15 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({
         >
           <div>
             <h3 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.2rem' }}>
-              該当するサブスクがありません
+              {subscriptions.length === 0 ? '登録されているサブスクがありません' : '該当するサブスクがありません'}
             </h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              条件を変更するか、新しいサブスクを追加してください。
+              {subscriptions.length === 0
+                ? '「サブスクを追加」または右上の「明細スキャン」から登録を始めましょう。'
+                : '条件を変更するか、新しいサブスクを追加してください。'}
             </p>
           </div>
-          <button className="btn btn-secondary btn-sm" onClick={onOpenAddModal}>
+          <button className="btn btn-primary btn-sm" onClick={onOpenAddModal}>
             <Plus size={14} />
             <span>サブスクを追加</span>
           </button>

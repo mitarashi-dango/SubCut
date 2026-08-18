@@ -3,9 +3,9 @@ import { INITIAL_BADGES } from '../constants/badges';
 import { calculateEquivalents, getCurrentMonthKey } from './calculation';
 
 const STORAGE_KEYS = {
-  SUBSCRIPTIONS: 'subcut_subscriptions_v1',
-  BADGES: 'subcut_badges_v1',
-  FIRST_RUN: 'subcut_first_run_done'
+  SUBSCRIPTIONS: 'subcut_subscriptions_v2',
+  BADGES: 'subcut_badges_v2',
+  FIRST_RUN: 'subcut_first_run_done_v2'
 } as const;
 
 /**
@@ -164,15 +164,14 @@ export function loadSubscriptions(): Subscription[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.SUBSCRIPTIONS);
     if (!raw) {
-      // 初回起動時はサンプルデータをセットアップ
-      const sample = getSampleSubscriptions();
-      saveSubscriptions(sample);
-      return sample;
+      // 初回起動時はまっさら（空配列）でスタート
+      saveSubscriptions([]);
+      return [];
     }
     return JSON.parse(raw);
   } catch (err) {
     console.error('Failed to load subscriptions from localStorage', err);
-    return getSampleSubscriptions();
+    return [];
   }
 }
 
@@ -227,4 +226,9 @@ export function saveBadges(badges: AchievementBadge[]): void {
 export function clearAllData(): void {
   localStorage.removeItem(STORAGE_KEYS.SUBSCRIPTIONS);
   localStorage.removeItem(STORAGE_KEYS.BADGES);
+  localStorage.removeItem(STORAGE_KEYS.FIRST_RUN);
+  // 旧バージョンのキーも念のため消去
+  localStorage.removeItem('subcut_subscriptions_v1');
+  localStorage.removeItem('subcut_badges_v1');
+  localStorage.removeItem('subcut_first_run_done');
 }

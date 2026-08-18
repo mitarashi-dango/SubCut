@@ -1,4 +1,4 @@
-const CACHE_NAME = 'subcut-cache-v1';
+const CACHE_NAME = 'subcut-cache-v2';
 
 const PRECACHE_ASSETS = [
   '/',
