@@ -8,7 +8,6 @@ import {
   ArrowRight, 
   Plus, 
   Camera,
-  Scissors,
   Sparkles
 } from 'lucide-react';
 import { Subscription } from '../types';

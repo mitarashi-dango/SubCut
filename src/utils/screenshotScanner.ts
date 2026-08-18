@@ -1,7 +1,5 @@
 import { PRESET_SERVICES } from '../constants/presets';
-import { CATEGORIES } from '../constants/categories';
 import { CategoryId, PresetService, Subscription } from '../types';
-import { calculateEquivalents, getCurrentMonthKey } from './calculation';
 
 // グローバルTesseractの型定義
 declare global {

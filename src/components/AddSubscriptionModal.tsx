@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Search, Sparkles, Plus } from 'lucide-react';
-import { BillingCycle, CategoryId, PresetService, Subscription } from '../types';
-import { CATEGORY_LIST, CATEGORIES } from '../constants/categories';
+import { BillingCycle, CategoryId, Subscription } from '../types';
+import { CATEGORY_LIST } from '../constants/categories';
 import { PRESET_SERVICES } from '../constants/presets';
 import { formatCurrency } from '../utils/formatters';
 import { CategoryIcon } from './CategoryIcon';

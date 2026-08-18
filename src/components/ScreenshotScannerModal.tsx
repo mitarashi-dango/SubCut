@@ -8,8 +8,7 @@ import {
   ArrowRight, 
   ShieldCheck, 
   Smartphone, 
-  AlertTriangle,
-  FileImage
+  AlertTriangle
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { 

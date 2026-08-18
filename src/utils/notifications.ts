@@ -3,7 +3,6 @@ import { getDaysUntilDate } from './calculation';
 import { formatCurrency } from './formatters';
 
 const NOTIFIED_CACHE_KEY = 'subcut_notified_reminders_cache';
-const REMINDER_THRESHOLD_DAYS = 3; // 3日以内を通知対象
 
 interface NotifiedCache {
   [subId: string]: string; // subId -> lastNotifiedDate (YYYY-MM-DD)

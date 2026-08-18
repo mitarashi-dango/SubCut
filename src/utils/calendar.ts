@@ -1,8 +1,6 @@
 import { Subscription } from '../types';
 import { formatCurrency } from './formatters';
 
-const ICS_ALARM_DAYS_BEFORE = [3, 1]; // 3日前と前日にリマインダーアラーム
-
 /**
  * 日付文字列（YYYY-MM-DD）を iCalendar 形式（YYYYMMDD）に変換
  */

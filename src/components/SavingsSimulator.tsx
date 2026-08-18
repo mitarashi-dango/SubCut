@@ -6,11 +6,9 @@ import {
   CheckSquare, 
   Square, 
   Coins, 
-  PiggyBank, 
   Flame, 
   Info,
-  Layers,
-  ArrowRight
+  Layers
 } from 'lucide-react';
 import { Subscription } from '../types';
 import { REWARD_ITEMS, calculateCompoundInterest } from '../constants/rewards';
