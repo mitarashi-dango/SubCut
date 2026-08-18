@@ -1,4 +1,4 @@
-import { BillingCycle, CostEvaluation, Subscription } from '../types';
+import { BillingCycle, CostEvaluation, CostEfficiencyLevel, Subscription } from '../types';
 
 // コスパ判定の基準定数
 export const COST_EFFICIENCY_THRESHOLDS = {

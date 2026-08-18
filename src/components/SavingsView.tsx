@@ -1,11 +1,13 @@
 import React from 'react';
 import { 
   Trophy, 
+  Scissors,
   RotateCcw, 
   Award, 
   CheckCircle2
 } from 'lucide-react';
 import { AchievementBadge, Subscription } from '../types';
+import { CATEGORIES } from '../constants/categories';
 import { calculateTotalAnnualSavings } from '../utils/calculation';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import { CategoryIcon } from './CategoryIcon';

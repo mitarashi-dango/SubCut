@@ -9,6 +9,7 @@ import {
   CreditCard, 
   AlertCircle,
   RotateCcw,
+  ShieldAlert,
   ChevronDown,
   ChevronUp,
   Edit3,
@@ -17,7 +18,8 @@ import {
   Download
 } from 'lucide-react';
 import { BillingCycle, CategoryId, Subscription } from '../types';
-import { CATEGORY_LIST } from '../constants/categories';
+import { CATEGORIES, CATEGORY_LIST } from '../constants/categories';
+import { PRESET_SERVICES } from '../constants/presets';
 import { CARRIER_CANCEL_GUIDES } from '../constants/carrierLinks';
 import { evaluateCostEfficiency, getCurrentMonthKey, getDaysUntilDate } from '../utils/calculation';
 import { formatCurrency, formatDate, formatDaysRemaining } from '../utils/formatters';

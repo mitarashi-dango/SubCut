@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, ExternalLink } from 'lucide-react';
+import { Plus, Minus, ExternalLink } from 'lucide-react';
 import { Subscription } from '../types';
 import { evaluateCostEfficiency, getDaysUntilDate, getCurrentMonthKey } from '../utils/calculation';
 import { formatCurrency, formatDaysRemaining } from '../utils/formatters';

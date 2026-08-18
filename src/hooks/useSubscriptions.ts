@@ -11,6 +11,7 @@ import {
 } from '../utils/storage';
 import { 
   calculateEquivalents, 
+  calculateTotalAnnualSavings,
   getCurrentMonthKey 
 } from '../utils/calculation';
 

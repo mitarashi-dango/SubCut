@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Smartphone, Share, PlusSquare, Compass, CheckCircle2, Download } from 'lucide-react';
+import { X, Smartphone, Share, PlusSquare, Compass, CheckCircle2, AlertTriangle, Download, ArrowUpRight } from 'lucide-react';
 
 interface PwaInstallModalProps {
   onClose: () => void;
