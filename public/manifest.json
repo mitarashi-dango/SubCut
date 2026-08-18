@@ -1,8 +1,8 @@
 {
   "name": "SubCut - サブスク断捨離・コスト最適化",
   "short_name": "SubCut",
-  "start_url": "/",
-  "id": "/",
+  "start_url": "./",
+  "id": "./",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#0d1117",
@@ -29,14 +29,14 @@
       "name": "サブスクを追加",
       "short_name": "追加",
       "description": "新しいサブスクを手動またはプリセットから登録",
-      "url": "/?action=add",
+      "url": "./?action=add",
       "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>➕</text></svg>", "sizes": "192x192" }]
     },
     {
       "name": "明細スクショをスキャン",
       "short_name": "スキャン",
       "description": "カード明細やApp Storeの画面を画像から解析",
-      "url": "/?action=scan",
+      "url": "./?action=scan",
       "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>", "sizes": "192x192" }]
     }
   ]
