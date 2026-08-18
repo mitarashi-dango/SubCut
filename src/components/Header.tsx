@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scissors, Plus, Settings2, LayoutDashboard, List, Trophy, AlertCircle, Camera } from 'lucide-react';
+import { Scissors, Plus, Settings2, LayoutDashboard, List, Trophy, AlertCircle, Camera, Smartphone } from 'lucide-react';
 
 export type ActiveTab = 'dashboard' | 'subscriptions' | 'savings' | 'zombies';
 
@@ -9,6 +9,7 @@ interface HeaderProps {
   onOpenAddModal: () => void;
   onOpenScannerModal: () => void;
   onOpenSettingsModal: () => void;
+  onOpenPwaModal?: () => void;
   zombieCount: number;
 }
 
@@ -18,6 +19,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAddModal,
   onOpenScannerModal,
   onOpenSettingsModal,
+  onOpenPwaModal,
   zombieCount
 }) => {
   return (
@@ -80,6 +82,16 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
 
           <div className="header-actions">
+            {onOpenPwaModal && (
+              <button
+                className="btn btn-secondary btn-icon"
+                onClick={onOpenPwaModal}
+                title="ホーム画面に追加（PWAインストール）"
+                aria-label="PWAアプリインストール"
+              >
+                <Smartphone size={16} style={{ color: 'var(--accent-primary)' }} />
+              </button>
+            )}
             <button
               className="btn btn-secondary btn-sm"
               onClick={onOpenScannerModal}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Download, 
@@ -8,10 +8,14 @@ import {
   CheckCircle2, 
   AlertTriangle,
   FileJson,
-  ShieldCheck
+  ShieldCheck,
+  Bell,
+  BellRing,
+  Smartphone
 } from 'lucide-react';
 import { AchievementBadge, AppBackupData, Subscription } from '../types';
 import { encryptData, decryptData } from '../utils/crypto';
+import { getNotificationPermission, requestNotificationPermission, checkAndTriggerBillingReminders } from '../utils/notifications';
 
 interface DataManagementModalProps {
   subscriptions: Subscription[];
@@ -20,6 +24,7 @@ interface DataManagementModalProps {
   onImport: (subs: Subscription[], badges?: AchievementBadge[]) => void;
   onResetSample: () => void;
   onClearAll: () => void;
+  onOpenPwaModal?: () => void;
 }
 
 export const DataManagementModal: React.FC<DataManagementModalProps> = ({
@@ -28,12 +33,36 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
   onClose,
   onImport,
   onResetSample,
-  onClearAll
+  onClearAll,
+  onOpenPwaModal
 }) => {
   const [exportPassword, setExportPassword] = useState('');
   const [importPassword, setImportPassword] = useState('');
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [notificationState, setNotificationState] = useState<string>('default');
+
+  useEffect(() => {
+    setNotificationState(getNotificationPermission());
+  }, []);
+
+  const handleRequestNotification = async () => {
+    const granted = await requestNotificationPermission();
+    setNotificationState(getNotificationPermission());
+    if (granted) {
+      setStatusMessage({
+        type: 'success',
+        text: '更新リマインダー通知が有効になりました！更新3日前・前日に自動通知されます。'
+      });
+      // 直ちにチェック
+      checkAndTriggerBillingReminders(subscriptions);
+    } else {
+      setStatusMessage({
+        type: 'error',
+        text: '通知がブロックされました。ブラウザの設定から通知を許可してください。'
+      });
+    }
+  };
 
   // バックアップエクスポート
   const handleExport = async () => {
@@ -89,7 +118,6 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
       let parsedJson: AppBackupData;
 
       if (file.name.endsWith('.subcut') || (!content.trim().startsWith('{') && !content.trim().startsWith('['))) {
-        // 暗号化ファイルまたはBase64
         if (!importPassword.trim()) {
           setStatusMessage({
             type: 'error',
@@ -100,7 +128,6 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
         const decryptedStr = await decryptData(content.trim(), importPassword.trim());
         parsedJson = JSON.parse(decryptedStr);
       } else {
-        // 通常のJSON
         parsedJson = JSON.parse(content);
       }
 
@@ -111,7 +138,6 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
           text: `復元に成功しました！ サブスク ${parsedJson.subscriptions.length} 件をインポートしました。`
         });
       } else if (Array.isArray(parsedJson)) {
-        // 旧形式またはサブスク配列のみの場合
         onImport(parsedJson as unknown as Subscription[]);
         setStatusMessage({
           type: 'success',
@@ -135,7 +161,7 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <FileJson size={20} style={{ color: 'var(--accent-primary)' }} />
-            <h2 className="modal-title">データ管理・バックアップ</h2>
+            <h2 className="modal-title">アプリ設定・データ管理</h2>
           </div>
           <button className="btn-icon" onClick={onClose} aria-label="閉じる">
             <X size={20} />
@@ -179,6 +205,52 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
               SubCutは<strong>完全ローカルファースト</strong>です。データはブラウザ内にのみ保存され、外部サーバーに送信されることは一切ありません。
             </div>
           </div>
+
+          {/* Notification & Reminders Setting */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <BellRing size={16} style={{ color: 'var(--color-warning)' }} /> 更新日・解約期限リマインダー通知
+            </h3>
+            <p style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+              次回更新日や無料体験終了日の3日前・前日に、ブラウザプッシュ通知で解約忘れを防止します。
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-card-secondary)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ fontSize: '0.825rem' }}>
+                通知ステータス: <strong>{notificationState === 'granted' ? '✅ 有効（受信中）' : notificationState === 'denied' ? '❌ ブロック中' : '⚠️ 未設定'}</strong>
+              </div>
+              {notificationState !== 'granted' && (
+                <button className="btn btn-primary btn-sm" onClick={handleRequestNotification}>
+                  <Bell size={14} />
+                  <span>通知を有効化</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* PWA App Installation Guide */}
+          {onOpenPwaModal && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Smartphone size={16} style={{ color: 'var(--accent-primary)' }} /> スマホ・ホーム画面アプリ追加 (PWA)
+              </h3>
+              <p style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>
+                スマホのホーム画面に追加すると、全画面でネイティブアプリのように使え、オフラインでも軽快に動作します。
+              </p>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => {
+                  onClose();
+                  onOpenPwaModal();
+                }}
+                style={{ alignSelf: 'flex-start' }}
+              >
+                <Smartphone size={14} />
+                <span>インストール・ホーム画面追加ガイドを開く</span>
+              </button>
+            </div>
+          )}
+
+          <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '0.2rem 0' }} />
 
           {/* Export Section */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>

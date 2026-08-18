@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSubscriptions } from './hooks/useSubscriptions';
 import { Header, ActiveTab } from './components/Header';
 import { Dashboard } from './components/Dashboard';
@@ -8,8 +8,10 @@ import { AddSubscriptionModal } from './components/AddSubscriptionModal';
 import { SubscriptionDetailModal } from './components/SubscriptionDetailModal';
 import { DataManagementModal } from './components/DataManagementModal';
 import { ScreenshotScannerModal } from './components/ScreenshotScannerModal';
+import { PwaInstallModal } from './components/PwaInstallModal';
 import { Subscription } from './types';
 import { evaluateCostEfficiency, getCurrentMonthKey } from './utils/calculation';
+import { checkAndTriggerBillingReminders } from './utils/notifications';
 
 export function App() {
   const {
@@ -31,20 +33,49 @@ export function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isScannerModalOpen, setIsScannerModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isPwaModalOpen, setIsPwaModalOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   const currentMonth = getCurrentMonthKey();
   const zombieCount = subscriptions.filter(
     (s) => s.status === 'active' && evaluateCostEfficiency(s, currentMonth).isZombie
   ).length;
 
+  // PWA beforeinstallprompt リスナー
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // URL クエリパラメータのショートカット処理
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    if (action === 'add') {
+      setIsAddModalOpen(true);
+    } else if (action === 'scan') {
+      setIsScannerModalOpen(true);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  // 更新日リマインダーの自動チェック
+  useEffect(() => {
+    if (isLoaded && subscriptions.length > 0) {
+      checkAndTriggerBillingReminders(subscriptions);
+    }
+  }, [isLoaded, subscriptions]);
+
   // スキャン結果の一括追加ハンドラー
   const handleBatchImportScanned = (newSubs: Subscription[]) => {
-    // 既存サブスクと重複チェックしつつマージ
     const existingNames = new Set(subscriptions.map((s) => s.name.toLowerCase()));
     const nonDuplicates = newSubs.filter((s) => !existingNames.has(s.name.toLowerCase()));
-    
-    // 重複分も含めてインポートするか確認（新規のみ追加）
     const merged = [...nonDuplicates, ...subscriptions];
     importBackupData(merged);
   };
@@ -78,6 +109,7 @@ export function App() {
         onOpenAddModal={() => setIsAddModalOpen(true)}
         onOpenScannerModal={() => setIsScannerModalOpen(true)}
         onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
+        onOpenPwaModal={() => setIsPwaModalOpen(true)}
         zombieCount={zombieCount}
       />
 
@@ -170,6 +202,16 @@ export function App() {
           onImport={importBackupData}
           onResetSample={resetToSampleData}
           onClearAll={clearAll}
+          onOpenPwaModal={() => setIsPwaModalOpen(true)}
+        />
+      )}
+
+      {/* PWA Installation & In-App Escape Modal */}
+      {isPwaModalOpen && (
+        <PwaInstallModal
+          onClose={() => setIsPwaModalOpen(false)}
+          deferredPrompt={deferredPrompt}
+          onInstalled={() => setDeferredPrompt(null)}
         />
       )}
     </div>

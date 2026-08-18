@@ -3,8 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161b22'/><text y='.78em' x='50%' text-anchor='middle' font-size='68'>✂️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#0d1117" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SubCut" />
     <meta name="description" content="使っていない無駄なサブスクを発見し、確実に解約して年間数万円の固定費を浮かす節約アシスタント「SubCut」" />
     <title>SubCut - サブスク断捨離・コスト最適化アシスタント</title>
     <link rel="manifest" href="/manifest.json" />
@@ -16,5 +20,19 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Service Worker Registration for PWA Offline Support
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => {
+              console.log('SubCut Service Worker registered:', reg.scope);
+            })
+            .catch((err) => {
+              console.warn('SubCut Service Worker registration failed:', err);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
