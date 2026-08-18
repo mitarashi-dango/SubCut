@@ -4,17 +4,14 @@ import {
   Scissors, 
   RotateCcw, 
   Award, 
-  CheckCircle2, 
-  Coins, 
-  Gift, 
-  Plane, 
-  Smartphone 
+  CheckCircle2
 } from 'lucide-react';
 import { AchievementBadge, Subscription } from '../types';
 import { CATEGORIES } from '../constants/categories';
 import { calculateTotalAnnualSavings } from '../utils/calculation';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import { CategoryIcon } from './CategoryIcon';
+import { SavingsSimulator } from './SavingsSimulator';
 
 interface SavingsViewProps {
   subscriptions: Subscription[];
@@ -33,18 +30,6 @@ export const SavingsView: React.FC<SavingsViewProps> = ({
   const totalAnnualSavings = calculateTotalAnnualSavings(subscriptions);
   const totalMonthlySavings = Math.round(totalAnnualSavings / 12);
 
-  // 浮かせたお金の換算例
-  const getRewardEquivalent = (savings: number) => {
-    if (savings >= 120000) return { title: '国内温泉旅行 2回分相当', icon: Plane };
-    if (savings >= 80000) return { title: '最新のAirPods Proやタブレット相当', icon: Smartphone };
-    if (savings >= 30000) return { title: '高級レストランのディナー相当', icon: Gift };
-    if (savings >= 10000) return { title: '書籍約10冊分相当', icon: Coins };
-    return { title: 'カフェラテ数杯分', icon: Coins };
-  };
-
-  const reward = getRewardEquivalent(totalAnnualSavings);
-  const RewardIcon = reward.icon;
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       {/* Hero Achievement Header */}
@@ -58,32 +43,20 @@ export const SavingsView: React.FC<SavingsViewProps> = ({
               固定費断捨離の実績
             </span>
             <div className="savings-value">
-              {formatCurrency(totalAnnualSavings)}
+              {formatCurrency(totalAnnualSavings)} <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>/ 年</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
-              月額換算で約 <strong style={{ color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>{formatCurrency(totalMonthlySavings)}</strong> の自由な資金を創出
+              月額換算で約 <strong style={{ color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>{formatCurrency(totalMonthlySavings)}</strong> の自由な資金を創出中
             </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            background: 'var(--bg-card-secondary)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '0.65rem 1rem',
-            border: '1px solid var(--border-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.6rem'
-          }}
-        >
-          <RewardIcon size={18} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
-          <div>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', display: 'block' }}>節約価値の目安</span>
-            <strong style={{ fontSize: '0.825rem', color: 'var(--text-main)' }}>{reward.title}</strong>
           </div>
         </div>
       </div>
+
+      {/* Interactive Savings Reward Simulator */}
+      <SavingsSimulator
+        subscriptions={subscriptions}
+        onSelectSubscription={onSelectSub}
+      />
 
       {/* Achievement Badges Collection */}
       <div>

@@ -8,7 +8,8 @@ import {
   ArrowRight, 
   Plus, 
   Camera,
-  Scissors
+  Scissors,
+  Sparkles
 } from 'lucide-react';
 import { Subscription } from '../types';
 import { CATEGORIES } from '../constants/categories';
@@ -46,6 +47,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // ゾンビ（未利用）サブスクの抽出
   const zombieSubscriptions = activeSubs.filter(
     (s) => evaluateCostEfficiency(s, currentMonth).isZombie
+  );
+
+  const potentialZombieSavings = zombieSubscriptions.reduce(
+    (sum, s) => sum + s.yearlyEquivalent,
+    0
   );
 
   // 7日以内に更新が迫っているサブスク
@@ -161,41 +167,100 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className="btn btn-primary btn-sm"
               onClick={onOpenAddModal}
             >
-              <Plus size={14} />
+              <Plus size={13} />
               <span>手動追加</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* KPI Overview Grid */}
-      <div className="kpi-grid">
+      {/* Simulator Teaser Banner (浮いたお金の使い道シミュレーターへの誘導) */}
+      {potentialZombieSavings > 0 ? (
+        <div
+          onClick={() => onNavigateToTab('savings')}
+          style={{
+            background: 'linear-gradient(135deg, #1c1914 0%, #151518 100%)',
+            border: '1px solid rgba(255, 214, 10, 0.35)',
+            borderRadius: 'var(--radius-md)',
+            padding: '0.85rem 1.15rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.85rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+          className="card-hover-effect"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span style={{ fontSize: '1.6rem' }}>♨️</span>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#ffd60a', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  節約シミュレーター
+                </span>
+                <Sparkles size={13} style={{ color: '#ffd60a' }} />
+              </div>
+              <strong style={{ fontSize: '0.9rem', color: '#ffffff', display: 'block', marginTop: '0.1rem' }}>
+                未利用サブスクを解約すると、年間 {formatCurrency(potentialZombieSavings)}（温泉旅行 {(potentialZombieSavings / 40000).toFixed(1)}回分）浮きます！
+              </strong>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            style={{ flexShrink: 0, fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
+          >
+            <span>使い道を見る</span>
+            <ArrowRight size={13} />
+          </button>
+        </div>
+      ) : null}
+
+      {/* KPI Stats Overview Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem' }}>
+        {/* Monthly Equivalent */}
         <div className="kpi-card">
           <span className="kpi-label">
-            <CreditCard size={14} style={{ color: 'var(--text-muted)' }} />
-            今月の固定費（月額換算）
+            <CreditCard size={14} /> 今月の固定費 (月額換算)
           </span>
-          <span className="kpi-amount">{formatCurrency(totals.monthlyTotal)}</span>
-          <span className="kpi-subtext">アクティブ {totals.activeCount} 件</span>
+          <div className="kpi-amount">
+            {formatCurrency(totals.monthlyTotal)}
+          </div>
+          <span className="kpi-subtext">
+            アクティブ {totals.activeCount} 件
+          </span>
         </div>
 
+        {/* Yearly Total */}
         <div className="kpi-card">
           <span className="kpi-label">
-            <TrendingDown size={14} style={{ color: 'var(--text-muted)' }} />
-            年間固定費総額
+            <TrendingDown size={14} /> 年間固定費総額
           </span>
-          <span className="kpi-amount">{formatCurrency(totals.yearlyTotal)}</span>
-          <span className="kpi-subtext">1年間の支払概算</span>
+          <div className="kpi-amount">
+            {formatCurrency(totals.yearlyTotal)}
+          </div>
+          <span className="kpi-subtext">
+            1年間の支払概算
+          </span>
         </div>
 
-        <div className="kpi-card" style={{ borderColor: totals.zombieCount > 0 ? 'rgba(255, 69, 58, 0.3)' : undefined }}>
+        {/* Zombie Subscriptions Count */}
+        <div
+          className="kpi-card"
+          style={{
+            borderColor: totals.zombieCount > 0 ? 'rgba(255, 69, 58, 0.4)' : undefined,
+            cursor: totals.zombieCount > 0 ? 'pointer' : 'default'
+          }}
+          onClick={() => totals.zombieCount > 0 && onNavigateToTab('zombies')}
+        >
           <span className="kpi-label" style={{ color: totals.zombieCount > 0 ? 'var(--color-danger)' : undefined }}>
-            <AlertCircle size={14} style={{ color: totals.zombieCount > 0 ? 'var(--color-danger)' : 'var(--text-subtle)' }} />
-            未利用サブスク
+            <AlertCircle size={14} /> 未利用サブスク
           </span>
-          <span className="kpi-amount" style={{ color: totals.zombieCount > 0 ? 'var(--color-danger)' : 'var(--text-main)' }}>
-            {totals.zombieCount} <span style={{ fontSize: '0.85rem' }}>件</span>
-          </span>
+          <div className="kpi-amount" style={{ color: totals.zombieCount > 0 ? 'var(--color-danger)' : undefined }}>
+            {totals.zombieCount} <span style={{ fontSize: '0.9rem' }}>件</span>
+          </div>
           <span className="kpi-subtext">
             {totals.zombieCount > 0 ? '今月の利用回数が0〜1回' : 'すべて活用されています'}
           </span>
