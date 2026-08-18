@@ -1,0 +1,72 @@
+:root {
+  /* iOS & Codex Inspired Minimal Palette (Dark System) */
+  --bg-app: #000000;
+  --bg-card: #161618;
+  --bg-card-hover: #1c1c1e;
+  --bg-card-solid: #161618;
+  --bg-card-secondary: #232326;
+  --bg-elevated: #2c2c2e;
+  --bg-input: #1c1c1e;
+  --bg-overlay: rgba(0, 0, 0, 0.72);
+  --bg-segmented: #1c1c1e;
+
+  /* Apple HIG & Linear Refined Accents */
+  --accent-primary: #0A84FF; /* Apple System Blue */
+  --accent-primary-hover: #0071E3;
+  --accent-primary-glow: rgba(10, 132, 255, 0.15);
+  --accent-secondary: #5E5CE6; /* Apple Indigo */
+
+  /* Semantic System Colors */
+  --color-danger: #FF453A; /* Apple System Red */
+  --color-danger-bg: rgba(255, 69, 58, 0.12);
+  --color-danger-subtle: rgba(255, 69, 58, 0.25);
+  
+  --color-warning: #FF9F0A; /* Apple System Orange */
+  --color-warning-bg: rgba(255, 159, 10, 0.12);
+  
+  --color-success: #30D158; /* Apple System Green */
+  --color-success-bg: rgba(48, 209, 88, 0.12);
+  
+  --color-info: #0A84FF;
+  --color-info-bg: rgba(10, 132, 255, 0.12);
+
+  /* Subtle Premium Gradients (Never gaudy) */
+  --color-gold: #FFD60A;
+  --color-gold-gradient: linear-gradient(180deg, #FFE066 0%, #FFD60A 100%);
+  --color-emerald-gradient: linear-gradient(180deg, #34C759 0%, #30D158 100%);
+  --color-blue-gradient: linear-gradient(180deg, #0A84FF 0%, #0071E3 100%);
+
+  /* Typography Hierarchy (iOS System) */
+  --text-main: #FFFFFF;
+  --text-muted: rgba(235, 235, 245, 0.6);
+  --text-subtle: rgba(235, 235, 245, 0.38);
+  --text-dark: #000000;
+
+  /* Borders & Dividers (Precise 1px hairline) */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.1);
+  --border-card-hover: rgba(255, 255, 255, 0.2);
+  --border-focus: #0A84FF;
+
+  /* iOS & Linear Shadows (Clean, subtle depth) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-segmented: 0 2px 8px rgba(0, 0, 0, 0.35);
+
+  /* Fonts */
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Plus Jakarta Sans", "Helvetica Neue", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
+
+  /* iOS Radii (Smooth super-ellipse) */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Fluid Apple Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
