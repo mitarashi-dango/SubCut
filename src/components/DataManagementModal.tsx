@@ -351,6 +351,30 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
               )}
             </div>
           </div>
+
+          <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '0.2rem 0' }} />
+
+          {/* Privacy Policy & Disclaimer */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-secondary)' }}>プライバシーポリシー・免責事項</h3>
+            <div
+              style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+                lineHeight: 1.6,
+                background: 'var(--bg-card-secondary)',
+                padding: '0.75rem 0.85rem',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border-subtle)'
+              }}
+            >
+              <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                <li><strong>データの安全性:</strong> 本アプリに入力されたサブスク情報、利用ログ、スクショ画像などはすべて端末（ブラウザ）内のみで処理・保存されます。外部サーバーへの送信は一切行われません。</li>
+                <li><strong>解約手続きについて:</strong> 本アプリで提供している解約直通リンクは、各サービスの公式ページへのショートカットです。各サービス側の仕様変更や契約形態（App Store/Google Play経由など）により手続き手順が異なる場合があります。解約の成立はお使いのサービス側で必ずご確認ください。</li>
+                <li><strong>免責事項:</strong> 本アプリの利用により生じた直接的・間接的な損害（解約遅延による追加課金等を含みます）について、開発者は一切の責任を負いかねます。</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div className="modal-footer">
